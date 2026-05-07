@@ -16,10 +16,10 @@ const GameDetail = sequelize.define(
       type: DataTypes.JSONB,
       allowNull: false,
     },
-    cachedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+    // cachedAt: {
+    //   type: DataTypes.DATE,
+    //   defaultValue: DataTypes.NOW,
+    // },
   },
   {
     timestamps: false,
