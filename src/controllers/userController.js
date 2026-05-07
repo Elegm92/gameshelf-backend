@@ -44,6 +44,7 @@ const updateUser = async (req, res) => {
     await user.update({ username, avatar, bio });
     res.json({ message: 'Usuario actualizado correctamente', id: user.id, username: user.username, avatar: user.avatar, bio: user.bio });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Error al actualizar el usuario', error });
   }
 };

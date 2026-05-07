@@ -29,9 +29,6 @@ const User = sequelize.define("User", {
   avatar: {
     type: DataTypes.STRING,
     defaultValue: null,
-    validate: {
-      isUrl: true,
-    },
   },
   bio: {
     type: DataTypes.TEXT,
