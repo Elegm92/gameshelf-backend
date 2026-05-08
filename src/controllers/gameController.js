@@ -118,18 +118,12 @@ const getGameDetails = async (req, res) => {
 
       const game = response.data;
 
-      const video = game.clip?.clip || null;
       const images = game.short_screenshots?.map((img) => img.image).filter(Boolean) || [];
 
       let media = {};
 
-      if (video) {
-        media = {
-          type: "video",
-          video,
-          fallbackImage: game.background_image || DEFAULT_GAME_IMAGE,
-        };
-      } else if (images.length > 0) {
+      
+      if (images.length > 0) {
         media = {
           type: "gallery",
           images,
