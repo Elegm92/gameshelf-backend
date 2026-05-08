@@ -2,6 +2,7 @@ import axios from "axios";
 
 const RAWG_BASE_URL = "https://api.rawg.io/api";
 const API_KEY = process.env.RAWG_API_KEY;
+const DEFAULT_GAME_IMAGE ="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=60";
 
 const getRandomGames = async (req, res) => {
     try {
@@ -42,9 +43,6 @@ const getRandomGames = async (req, res) => {
 };
 
 const searchGames = async (req, res) => {
-    const DEFAULT_GAME_IMAGE =
-      "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=60";
-
      try {
        const { query } = req.query;
 
