@@ -5,6 +5,8 @@ import './src/models/index.js'
 import userRoutes from './src/routes/userRoute.js';
 import gameRoutes from './src/routes/gameRoute.js';
 import authRoutes from "./src/routes/authRoutes.js";
+import gameListRoutes from './src/routes/gameListRoute.js'
+import reviewRoutes from './src/routes/reviewRoute.js';
 
 dotenv.config();
 
@@ -17,6 +19,9 @@ app.use(express.json());
 app.use('/users', userRoutes);
 app.use("/games", gameRoutes);
 app.use("/auth", authRoutes);
+app.use('/gamelist', gameListRoutes);
+app.use('/reviews', reviewRoutes);
+
 
 app.get('/', (req, res) => {
   res.json({ message: "GameShelf API is running" });
