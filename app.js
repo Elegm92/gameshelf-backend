@@ -4,6 +4,7 @@ import sequelize from './src/config/database.js';
 import './src/models/index.js'
 import userRoutes from './src/routes/userRoute.js';
 import gameRoutes from './src/routes/gameRoute.js';
+import authRoutes from "./src/routes/authRoutes.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 //rutas api
 app.use('/users', userRoutes);
 app.use("/games", gameRoutes);
+app.use("/auth", authRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: "GameShelf API is running" });
