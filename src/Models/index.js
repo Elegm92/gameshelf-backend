@@ -1,5 +1,4 @@
 import User from "./User.js";
-import GameDetail from "./GameDetail.js";
 import GameList from "./GameList.js";
 import Review from "./Review.js";
 import Like from "./Like.js";
@@ -16,4 +15,4 @@ Like.belongsTo(User, { foreignKey: "userId" });
 Review.hasMany(Like, { foreignKey: "reviewId" });
 Like.belongsTo(Review, { foreignKey: "reviewId" });
 
-export { User, GameDetail, GameList, Review, Like };
+export { User, GameList, Review, Like };
