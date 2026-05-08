@@ -5,6 +5,7 @@ import './src/Models/index.js'
 import userRoutes from './src/routes/userRoute.js';
 import gameRoutes from './src/routes/gameRoute.js';
 import gameListRoutes from './src/routes/gameListRoute.js'
+import reviewRoutes from './src/routes/reviewRoute.js';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/users', userRoutes);
 app.use("/games", gameRoutes);
 app.use('/gamelist', gameListRoutes);
+app.use('/reviews', reviewRoutes);
 
 
 app.get('/', (req, res) => {
