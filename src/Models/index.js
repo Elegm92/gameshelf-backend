@@ -3,6 +3,7 @@ import GameList from "./GameList.js";
 import Review from "./Review.js";
 import Like from "./Like.js";
 
+//relaciones
 User.hasMany(GameList, { foreignKey: "userId" });
 GameList.belongsTo(User, { foreignKey: "userId" });
 
