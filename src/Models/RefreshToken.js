@@ -17,4 +17,15 @@ const RefreshToken = sequelize.define("RefreshToken", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: "id",
+    },
+    onDelete: "CASCADE",
+  },
 });
+
+export default RefreshToken;
