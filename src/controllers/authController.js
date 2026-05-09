@@ -1,4 +1,7 @@
+import bcrypt from "bcrypt";
 import { User } from "../models/index.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
+import RefreshToken from "../models/RefreshToken.js";
 
 const registerUser = async (req, res) => {
     try {
@@ -69,11 +72,13 @@ const registerUser = async (req, res) => {
         });
       }
 
+      const hashedPassword = await bcrypt.hash(cleanPassword, 10);
+
       // crear usuario
       const user = await User.create({
         username: cleanUsername,
         email: cleanEmail,
-        password: cleanPassword
+        password: hashedPassword,
       });
       res.status(201).json({
         message: "User registered successfully",
@@ -128,14 +133,48 @@ const loginUser = async (req, res) => {
       }
 
       // comparar password
-      if (user.password !== cleanPassword) {
+      const isPasswordValid = await bcrypt.compare(
+        cleanPassword,
+        user.password
+      );
+
+      if (!isPasswordValid) {
         return res.status(401).json({
           message: "Invalid credentials",
         });
       }
 
+      //tokens
+       const accessToken = generateAccessToken({
+         id: user.id,
+         role: user.role,
+       });
+
+       const refreshToken = generateRefreshToken({
+         id: user.id,
+       });
+
+       //save refresh token in bbdd
+       await RefreshToken.create({
+         token: refreshToken,
+         userId: user.id,
+         isValid: true,
+         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+       });
+
+       //save cookie - refresh token 
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: false, // true en producción (HTTPS)
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
       res.status(200).json({
+
         message: "Login successful",
+        accessToken,
+
         user: {
           id: user.id,
           username: user.username,
