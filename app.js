@@ -7,6 +7,7 @@ import gameRoutes from './src/routes/gameRoute.js';
 import authRoutes from "./src/routes/authRoutes.js";
 import gameListRoutes from './src/routes/gameListRoute.js'
 import reviewRoutes from './src/routes/reviewRoute.js';
+import likeRoutes from './src/routes/likeRoutes.js'
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use("/games", gameRoutes);
 app.use("/auth", authRoutes);
 app.use('/gamelist', gameListRoutes);
 app.use('/reviews', reviewRoutes);
+app.use('/likes', likeRoutes);
 
 
 app.get('/', (req, res) => {
