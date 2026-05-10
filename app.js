@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import sequelize from './src/config/database.js';
 import './src/models/index.js'
 import userRoutes from './src/routes/userRoute.js';
@@ -24,6 +25,8 @@ app.use('/gamelist', gameListRoutes);
 app.use('/reviews', reviewRoutes);
 app.use('/likes', likeRoutes);
 
+//Conexion Back con front
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.json({ message: "GameShelf API is running" });
