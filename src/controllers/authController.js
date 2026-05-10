@@ -165,7 +165,7 @@ const loginUser = async (req, res) => {
        //save cookie - refresh token 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: false, // true en producción (HTTPS)
+          secure: false, 
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
@@ -192,4 +192,29 @@ const loginUser = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser };
+const refreshAccessToken = async (req, res) => {
+  try {
+    // obtener refresh token desde cookie
+    const refreshToken = req.cookies.refreshToken;
+
+    // comprobar si existe
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "Refresh token not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Refresh token received",
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("refreshAccessToken error:", error.message);
+
+    return res.status(500).json({
+      message: "Failed to refresh token",
+    });
+  }
+};
+
+export { registerUser, loginUser, refreshAccessToken };
