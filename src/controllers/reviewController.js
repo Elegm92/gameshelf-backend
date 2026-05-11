@@ -2,11 +2,8 @@ import { Review } from '../models/index.js';
 
 const createReview = async (req, res) => {
   try {
-    const { userId, rawgId, content, rating } = req.body;
-
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: 'Invalid user ID' });
-    }
+    const userId = req.user.id;
+    const { rawgId, content, rating } = req.body;
 
     if (!rawgId || isNaN(Number(rawgId))) {
       return res.status(400).json({ message: 'Invalid game ID' });
@@ -77,6 +74,7 @@ const getUserReviews = async (req, res) => {
 const updateReview = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user.id;
     const { content, rating } = req.body;
 
     if (!id || isNaN(Number(id))) {
@@ -97,6 +95,10 @@ const updateReview = async (req, res) => {
       return res.status(404).json({ message: 'Reseña no encontrada' });
     }
 
+    if (review.userId !== userId) {
+      return res.status(403).json({ message: "No tienes permiso para editar esta reseña" });
+    }
+
     await review.update({ content, rating });
     res.json({ message: 'Reseña actualizada correctamente', review });
 
@@ -109,6 +111,7 @@ const updateReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user.id;
 
     if (!id || isNaN(Number(id))) {
       return res.status(400).json({ message: 'Invalid review ID' });
@@ -118,6 +121,10 @@ const deleteReview = async (req, res) => {
 
     if (!review) {
       return res.status(404).json({ message: 'Reseña no encontrada' });
+    }
+
+    if (review.userId !== userId) {
+      return res.status(403).json({ message: "No tienes permiso para eliminar esta reseña" });
     }
 
     await review.destroy();

@@ -1,10 +1,12 @@
 import { Router } from 'express';
+import verifyToken from "../middleware/authMiddleware.js";
 import { addGameToList, getUserList, removeGameFromList } from '../controllers/gameListController.js';
 
 const router = Router();
 
-router.post('/', addGameToList);
+
 router.get('/:userId', getUserList);
-router.delete('/:userId/:rawgId', removeGameFromList);
+router.post("/", verifyToken, addGameToList);
+router.delete('/:rawgId',verifyToken, removeGameFromList);
 
 export default router;

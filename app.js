@@ -4,17 +4,20 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import sequelize from './src/config/database.js';
 import './src/models/index.js'
-import userRoutes from './src/routes/userRoute.js';
-import gameRoutes from './src/routes/gameRoute.js';
+import userRoutes from './src/routes/userRoutes.js';
+import gameRoutes from './src/routes/gameRoutes.js';
 import authRoutes from "./src/routes/authRoutes.js";
-import gameListRoutes from './src/routes/gameListRoute.js'
-import reviewRoutes from './src/routes/reviewRoute.js';
+import gameListRoutes from './src/routes/gameListRoutes.js'
+import reviewRoutes from './src/routes/reviewRoutes.js';
 import likeRoutes from './src/routes/likeRoutes.js'
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+//Conexion Back con front
+app.use(cors());
 
 app.use(express.json());
 app.use(cookieParser());
@@ -26,9 +29,6 @@ app.use("/auth", authRoutes);
 app.use('/gamelist', gameListRoutes);
 app.use('/reviews', reviewRoutes);
 app.use('/likes', likeRoutes);
-
-//Conexion Back con front
-app.use(cors());
 
 app.get('/', (req, res) => {
   res.json({ message: "GameShelf API is running" });

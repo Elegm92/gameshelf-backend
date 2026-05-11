@@ -10,11 +10,8 @@ const validStatus = [
 
 const addGameToList = async (req, res) => {
   try {
-    const { userId, rawgId, status } = req.body;
-
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Invalid user ID" });
-    }
+    const userId = req.user.id;
+    const { rawgId, status } = req.body;
 
     if (!rawgId || isNaN(Number(rawgId))) {
       return res.status(400).json({ message: "Invalid game ID" });
@@ -22,8 +19,7 @@ const addGameToList = async (req, res) => {
 
     if (!status || !validStatus.includes(status)) {
       return res
-        .status(400)
-        .json({
+        .status(400).json({
           message:
             "Invalid status. Must be one of: playing, completed, pending, abandoned, wishlist",
         });
@@ -68,11 +64,8 @@ const getUserList = async (req, res) => {
 
 const removeGameFromList = async (req, res) => {
   try {
-    const { userId, rawgId } = req.params;
-
-    if (!userId || isNaN(Number(userId))) {
-      return res.status(400).json({ message: "Invalid user ID" });
-    }
+    const userId = req.user.id;
+    const { rawgId } = req.params;
 
     if (!rawgId || isNaN(Number(rawgId))) {
       return res.status(400).json({ message: "Invalid game ID" });
@@ -86,6 +79,7 @@ const removeGameFromList = async (req, res) => {
 
     await game.destroy();
     res.json({ message: "Juego eliminado de la lista" });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al eliminar el juego de la lista" });
