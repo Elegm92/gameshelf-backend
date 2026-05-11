@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 import cors from 'cors';
 import sequelize from './src/config/database.js';
 import './src/models/index.js'
@@ -16,6 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cookieParser());
 
 //rutas api
 app.use('/users', userRoutes);
