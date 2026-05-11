@@ -1,8 +1,7 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { User } from "../models/index.js";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js";
-import RefreshToken from "../models/RefreshToken.js";
+import { generateAccessToken } from "../utils/jwt.js";
+
 
 const registerUser = async (req, res) => {
     try {
@@ -10,9 +9,7 @@ const registerUser = async (req, res) => {
 
       //validación campos
       if (!username || !email || !password) {
-        return res.status(400).json({
-          message: "All fields are required",
-        });
+        return res.status(400).json({message: "All fields are required"});
       }
 
       // limpiar datos
@@ -45,7 +42,7 @@ const registerUser = async (req, res) => {
         });
       }
 
-      if (cleanPassword.length > 100) {
+      if (cleanPassword.length > 50) {
         return res.status(400).json({
           message: "Password too long",
         });
@@ -136,7 +133,7 @@ const loginUser = async (req, res) => {
       // comparar password
       const isPasswordValid = await bcrypt.compare(
         cleanPassword,
-        user.password
+        user.password,
       );
 
       if (!isPasswordValid) {
@@ -146,33 +143,20 @@ const loginUser = async (req, res) => {
       }
 
       //tokens
-       const accessToken = generateAccessToken({
-         id: user.id,
-         role: user.role,
-       });
+      const accessToken = generateAccessToken({
+        id: user.id,
+        role: user.role,
+      });
 
-       const refreshToken = generateRefreshToken({
-         id: user.id,
-       });
-
-       //save refresh token in bbdd
-       await RefreshToken.create({
-         token: refreshToken,
-         userId: user.id,
-         isValid: true,
-         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-       });
-
-       //save cookie - refresh token 
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: true,
-          secure: false, 
-          sameSite: "strict",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+      // mandar token en cookie httpOnly
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: false, // cambiar a true en producción
+        sameSite: "strict",
+        maxAge: 2 * 60 * 60 * 1000, // 2h
+      });
 
       res.status(200).json({
-
         message: "Login successful",
         accessToken,
 
@@ -183,7 +167,6 @@ const loginUser = async (req, res) => {
           role: user.role,
         },
       });
-
     } catch (error) {
       console.error("loginUser error:", error.message);
 
@@ -193,66 +176,9 @@ const loginUser = async (req, res) => {
     }
 };
 
-const refreshAccessToken = async (req, res) => {
-  try {
-    // obtener refresh token desde cookie
-    const refreshToken = req.cookies.refreshToken;
-
-    // comprobar si existe
-    if (!refreshToken) {
-      return res.status(401).json({
-        message: "Refresh token not found",
-      });
-    }
-
-    // verificar que el token es válido
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-
-    // comprobar que existe en la base de datos y es válido
-    const storedToken = await RefreshToken.findOne({
-      where: { token: refreshToken, isValid: true },
-    });
-
-    if (!storedToken) {
-      return res.status(401).json({ message: "Invalid refresh token" });
-    }
-
-    // generar nuevo access token
-    const newAccessToken = generateAccessToken({
-      id: decoded.id,
-      role: decoded.role,
-    });
-
-    return res.status(200).json({
-      message: "Access token refreshed",
-      accessToken: newAccessToken,
-    });
-  } catch (error) {
-    console.error("refreshAccessToken error:", error.message);
-
-    return res.status(401).json({
-      message: "Invalid or expired refresh token",
-    });
-  }
-};
-
 const logoutUser = async (req, res) => {
-  try {
-    const refreshToken = req.cookies.refreshToken;
-
-    if (refreshToken) {
-      await RefreshToken.update(
-        { isValid: false },
-        { where: { token: refreshToken } },
-      );
-    }
-
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken");
     res.json({ message: "Logged out successfully" });
-  } catch (error) {
-    console.error("logoutUser error:", error.message);
-    res.status(500).json({ message: "Failed to logout" });
-  }
 };
 
-export { registerUser, loginUser, refreshAccessToken, logoutUser };
+export { registerUser, loginUser, logoutUser };

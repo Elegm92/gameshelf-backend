@@ -24,18 +24,6 @@ const getUserById = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) return res.status(400).json({ message: 'El usuario ya existe' });
-    const user = await User.create({ username, email, password });
-    res.status(201).json({ message: 'Usuario creado correctamente', id: user.id, username: user.username, email: user.email });
-  } catch (error) {
-    res.status(500).json({ message: 'Error al crear el usuario', error });
-  }
-};
-
 const updateUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
