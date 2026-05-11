@@ -2,17 +2,11 @@ import jwt from "jsonwebtoken";
 
 const verifyToken = (req, res, next) => {
   try {
+    const cookieToken = req.cookies?.accessToken;
     const authHeader = req.headers.authorization;
 
-    // 1. comprobar si existe header
-    if (!authHeader) {
-      return res.status(401).json({
-        message: "No token provided",
-      });
-    }
-
     // 2. formato esperado TOKEN
-    const token = authHeader.split(" ")[1];
+    const token = cookieToken || (authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null);
 
     if (!token) {
       return res.status(401).json({
@@ -28,6 +22,7 @@ const verifyToken = (req, res, next) => {
 
     // 5. continuar
     next();
+    
   } catch (error) {
     return res.status(401).json({
       message: "Invalid or expired token",

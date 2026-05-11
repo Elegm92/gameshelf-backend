@@ -8,21 +8,9 @@ const generateAccessToken = (user) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: "20m",
+      expiresIn: "2h",
     },
   );
 };
 
-const generateRefreshToken = (user) => {
-  return jwt.sign(
-    {
-      id: user.id,
-    },
-    process.env.JWT_REFRESH_SECRET,
-    {
-      expiresIn: "7d",
-    },
-  );
-};
-
-export { generateAccessToken, generateRefreshToken };
+export { generateAccessToken };
