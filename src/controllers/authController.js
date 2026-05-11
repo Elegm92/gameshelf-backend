@@ -176,9 +176,31 @@ const loginUser = async (req, res) => {
     }
 };
 
+const me = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ["id", "username", "email", "role"],
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("me error:", error.message);
+
+    return res.status(500).json({
+      message: "Failed to get user",
+    });
+  }
+};
+
 const logoutUser = async (req, res) => {
     res.clearCookie("accessToken");
     res.json({ message: "Logged out successfully" });
 };
 
-export { registerUser, loginUser, logoutUser };
+export { registerUser, loginUser, me , logoutUser };
