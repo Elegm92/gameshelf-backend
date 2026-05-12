@@ -21,7 +21,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173/";
 
 const authLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 15 minutos
-  max: 3, // máximo 10 intentos
+  max: 300, // máximo 10 intentos
   message: { message: "Demasiados intentos, prueba de nuevo en 5 minutos" },
 });
 
