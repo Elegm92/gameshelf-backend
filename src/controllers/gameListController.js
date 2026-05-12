@@ -1,4 +1,5 @@
 import { GameList } from "../models/index.js";
+import axios from 'axios'
 
 const validStatus = [
   "playing",
@@ -55,7 +56,25 @@ const getUserList = async (req, res) => {
       where: { userId },
     });
 
-    res.json(gameList);
+    
+    const gamesWithData = await Promise.all(
+      gameList.map(async (entry) => {
+        const response = await axios.get(`https://api.rawg.io/api/games/${entry.rawgId}`, 
+          {
+          params: { key: process.env.RAWG_API_KEY }
+        });
+        return {
+          id: entry.id,
+          rawgId: entry.rawgId,
+          status: entry.status,
+          name: response.data.name,
+          image: response.data.background_image,
+          genres: response.data.genres?.map(g => g.name) || []
+        }
+      })
+    );
+
+    res.json(gamesWithData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener la lista del usuario" });
