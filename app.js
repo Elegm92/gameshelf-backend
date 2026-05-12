@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import sequelize from './src/config/database.js';
 import './src/models/index.js'
 import userRoutes from './src/routes/userRoutes.js';
@@ -18,6 +19,12 @@ const PORT = process.env.PORT || 3000;
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173/";
 
+const authLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 15 minutos
+  max: 3, // máximo 10 intentos
+  message: { message: "Demasiados intentos, prueba de nuevo en 5 minutos" },
+});
+
 //Conexion Back con front
 app.use(
   cors({
@@ -32,7 +39,7 @@ app.use(cookieParser());
 //rutas api
 app.use('/users', userRoutes);
 app.use("/games", gameRoutes);
-app.use("/auth", authRoutes);
+app.use("/auth", authLimiter, authRoutes);
 app.use('/gamelist', gameListRoutes);
 app.use('/reviews', reviewRoutes);
 app.use('/likes', likeRoutes);
