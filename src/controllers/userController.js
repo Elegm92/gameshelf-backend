@@ -28,7 +28,9 @@ const updateUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
-    const { username, avatar, bio } = req.body;
+    
+    const { username, bio } = req.body;
+    const avatar = req.file ? req.file.path : user.avatar;
     await user.update({ username, avatar, bio });
     res.json({ message: 'Usuario actualizado correctamente', id: user.id, username: user.username, avatar: user.avatar, bio: user.bio });
   } catch (error) {
