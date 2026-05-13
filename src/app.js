@@ -3,14 +3,14 @@ import dotenv from 'dotenv';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import sequelize from './src/config/database.js';
-import './src/models/index.js'
-import userRoutes from './src/routes/userRoutes.js';
-import gameRoutes from './src/routes/gameRoutes.js';
-import authRoutes from "./src/routes/authRoutes.js";
-import gameListRoutes from './src/routes/gameListRoutes.js'
-import reviewRoutes from './src/routes/reviewRoutes.js';
-import likeRoutes from './src/routes/likeRoutes.js'
+import sequelize from './config/database.js';
+import './models/index.js'
+import userRoutes from './routes/userRoutes.js';
+import gameRoutes from './routes/gameRoutes.js';
+import authRoutes from "./routes/authRoutes.js";
+import gameListRoutes from './routes/gameListRoutes.js'
+import reviewRoutes from './routes/reviewRoutes.js';
+import likeRoutes from './routes/likeRoutes.js'
 
 dotenv.config();
 
