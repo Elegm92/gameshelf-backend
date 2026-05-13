@@ -146,7 +146,9 @@ const getGameDetails = async (req, res) => {
         videos =
           igdbGame.videos
             ?.slice(0, 1)
-            .map((v) => `https://www.youtube.com/embed/${v.video_id}`) || [];
+            .map(
+              (v) => `https://www.youtube.com/embed/${v.video_id}?enablejsapi=1`,
+            ) || [];
       }
     } catch (igdbError) {
       console.error("IGDB error:", igdbError.message);
