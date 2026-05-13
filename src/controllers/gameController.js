@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getIGDBToken } from "../config/igdb.js";
 
 const RAWG_BASE_URL = "https://api.rawg.io/api";
 const API_KEY = process.env.RAWG_API_KEY;
@@ -118,23 +119,38 @@ const getGameDetails = async (req, res) => {
 
       const game = response.data;
 
-      const images = game.short_screenshots?.map((img) => img.image).filter(Boolean) || [];
+      // Llamada a IGDB para screenshots y videos
+    let screenshots = []
+    let videos = []
 
-      let media = {};
+    try {
+      const token = await getIGDBToken();
+      const igdbResponse = await axios.post(
+        "https://api.igdb.com/v4/games",
+        `search "${game.name}"; fields screenshots.url, videos.video_id; limit 1;`,
+        {
+          headers: {
+            "Client-ID": process.env.IGDB_CLIENT_ID,
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "text/plain",
+          },
+        },
+      );
 
-      
-      if (images.length > 0) {
-        media = {
-          type: "gallery",
-          images,
-          fallbackImage: game.background_image || DEFAULT_GAME_IMAGE,
-        };
-      } else {
-        media = {
-          type: "image",
-          image: game.background_image || DEFAULT_GAME_IMAGE,
-        };
+      if (igdbResponse.data.length > 0) {
+        const igdbGame = igdbResponse.data[0];
+        screenshots =
+          igdbGame.screenshots
+            ?.slice(0, 4)
+            .map((s) => s.url.replace("t_thumb", "t_screenshot_big")) || [];
+        videos =
+          igdbGame.videos
+            ?.slice(0, 1)
+            .map((v) => `https://www.youtube.com/embed/${v.video_id}`) || [];
       }
+    } catch (igdbError) {
+      console.error("IGDB error:", igdbError.message);
+    }
 
       const formattedGame = {
         id: game.id,
@@ -145,7 +161,9 @@ const getGameDetails = async (req, res) => {
         platforms: game.platforms?.map((p) => p.platform.name) || [],
         released: game.released,
         website: game.website,
-        media,
+        image: game.background_image || DEFAULT_GAME_IMAGE,
+        screenshots,
+        videos,
       };
 
       res.status(200).json(formattedGame);
