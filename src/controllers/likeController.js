@@ -1,4 +1,4 @@
-import { Like } from "../models/index.js";
+import { Like } from "../Models/index.js";
 
 const getReviewLikes = async (req, res) => {
   try {

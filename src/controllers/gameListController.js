@@ -1,4 +1,4 @@
-import { GameList } from "../models/index.js";
+import { GameList } from "../Models/index.js";
 import axios from 'axios'
 
 const validStatus = [

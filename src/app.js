@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import sequelize from './config/database.js';
-import './models/index.js'
+import './Models/index.js'
 import userRoutes from './routes/userRoutes.js';
 import gameRoutes from './routes/gameRoutes.js';
 import authRoutes from "./routes/authRoutes.js";

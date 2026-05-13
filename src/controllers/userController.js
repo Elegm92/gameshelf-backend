@@ -1,5 +1,5 @@
 // src/controllers/userController.js
-import { User } from '../models/index.js';
+import { User } from '../Models/index.js';
 
 const getAllUsers = async (req, res) => {
   try {

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { User } from "../models/index.js";
+import { User } from "../Models/index.js";
 import { generateAccessToken } from "../utils/jwt.js";
 
 
