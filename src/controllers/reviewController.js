@@ -3,7 +3,7 @@ import { Review } from '../Models/index.js';
 const createReview = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { rawgId, content, rating } = req.body;
+    const { rawgId, content, rating, gameName } = req.body;
 
     if (!rawgId || isNaN(Number(rawgId))) {
       return res.status(400).json({ message: 'Invalid game ID' });
@@ -22,7 +22,7 @@ const createReview = async (req, res) => {
       return res.status(400).json({ message: 'Ya has escrito una reseña para este juego' });
     }
 
-    const review = await Review.create({ userId, rawgId, content, rating });
+    const review = await Review.create({userId,gameName,rawgId,content,rating });
     res.status(201).json({ message: 'Reseña creada correctamente', review });
 
   } catch (error) {

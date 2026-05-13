@@ -12,6 +12,13 @@ const Review = sequelize.define(
         min: 1,
       },
     },
+    gameName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     rawgId: {
       type: DataTypes.INTEGER,
       allowNull: false,
