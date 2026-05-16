@@ -85,8 +85,8 @@ const updateReview = async (req, res) => {
       return res.status(400).json({ message: 'La reseña debe tener al menos 10 caracteres' });
     }
 
-    if (!rating || isNaN(Number(rating)) || rating < 1 || rating > 10) {
-      return res.status(400).json({ message: 'La puntuación debe ser un número entre 1 y 10' });
+    if (!rating || isNaN(Number(rating)) || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'La puntuación debe ser un número entre 1 y 5' });
     }
 
     const review = await Review.findByPk(id);
