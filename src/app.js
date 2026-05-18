@@ -11,17 +11,22 @@ import authRoutes from "./routes/authRoutes.js";
 import gameListRoutes from './routes/gameListRoutes.js'
 import reviewRoutes from './routes/reviewRoutes.js';
 import likeRoutes from './routes/likeRoutes.js'
+import swaggerUi from "swagger-ui-express";
+import YAML from"yamljs";
+import path from "path";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const openapiDocument = YAML.load(path.join(process.cwd(), "docs", "openapi.yaml"));
+
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173/";
 
 const authLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 15 minutos
-  max: 300, // máximo 10 intentos
+  max: 3, // máximo 10 intentos
   message: { message: "Demasiados intentos, prueba de nuevo en 5 minutos" },
 });
 
@@ -43,6 +48,9 @@ app.use("/auth", authLimiter, authRoutes);
 app.use('/gamelist', gameListRoutes);
 app.use('/reviews', reviewRoutes);
 app.use('/likes', likeRoutes);
+
+//docs
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapiDocument));
 
 app.get('/', (req, res) => {
   res.json({ message: "GameShelf API is running" });

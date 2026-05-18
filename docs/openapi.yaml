@@ -1,0 +1,384 @@
+openapi: 3.0.0
+info:
+  title: GameShelf
+  version: 1.0.0
+servers:
+  - url: /
+    description: API same origin
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Users
+      summary: Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: pepito
+                email: pepito@gmail.com
+                password: '12345678'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+  /users/1:
+    get:
+      tags:
+        - Users
+      summary: Get user
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - Users
+      summary: Update user
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: pepito2
+                avatar: https://imagen.com/foto.jpg
+                bio: Me gustan los videojuegos
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /games:
+    get:
+      tags:
+        - Games
+      summary: Home random
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+  /games/search:
+    get:
+      tags:
+        - Games
+      summary: Home search
+      parameters:
+        - name: query
+          in: query
+          schema:
+            type: string
+          example: zelda
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+  /games/17352:
+    get:
+      tags:
+        - Games
+      summary: Game detail
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: testuser
+                email: test@test.com
+                password: '12345678'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json: {}
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: test@test.com
+                password: '12345678'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json: {}
+
+  /auth/me:
+    get:
+      tags:
+        - Auth
+      summary: Get current user
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logged out successfully
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /gamelist:
+    post:
+      tags:
+        - GameList
+      summary: Add Game
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                userId: 1
+                rawgId: 3498
+                status: playing
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /gamelist/1:
+    get:
+      tags:
+        - GameList
+      summary: User Games
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /gamelist/3498:
+    delete:
+      tags:
+        - GameList
+      summary: Delete Game
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /reviews:
+    post:
+      tags:
+        - Reviews
+      summary: Create Review
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                userId: 1
+                rawgId: 3498
+                content: Un juego increíble con una historia épica
+                rating: 9
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /reviews/game/3498:
+    get:
+      tags:
+        - Reviews
+      summary: Game Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+  /reviews/user/3:
+    get:
+      tags:
+        - Reviews
+      summary: User Reviews
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+  /reviews/3:
+    put:
+      tags:
+        - Reviews
+      summary: Update Review
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                content: Un juego increíble con una historia épica y un final impresionante
+                rating: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - Reviews
+      summary: Delete Review
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /likes:
+    post:
+      tags:
+        - Likes
+      summary: Add Like
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                userId: 4
+                reviewId: 2
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
+
+  /likes/2:
+    get:
+      tags:
+        - Likes
+      summary: Review Likes
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Likes
+      summary: Remove Like
+      security:
+        - cookieAuth: []
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '401':
+          description: Unauthorized
